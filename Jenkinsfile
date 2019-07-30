@@ -1,6 +1,13 @@
 pipeline {
     agent any
 
+    environment{
+        PROJECT_ID='gke-jenkins-246915'
+        IMAGE_NAME='configserver'
+        ENV='dev'    
+        IMAGE_TAG='gcr.io/'+$PROJECT_ID+'/'+$IMAGE_NAME+':latest'
+        
+    }
     tools{
        maven 'M3'
     }
@@ -11,10 +18,19 @@ pipeline {
                git url: 'https://github.com/vipintembhare/configserverapp.git'
             }
         }
-        stage ('Compile Stage') {
+        stage ('Build Stage') {
 
             steps {
                     sh 'mvn clean install'
+            }
+        }
+        stage ('Docker Stage') {
+
+            steps {
+                    script {
+                    image = docker.build("${IMAGE_NAME}")
+                    println "Newly generated image, " + image.id
+                }
             }
         }
     }
