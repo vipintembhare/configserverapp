@@ -5,7 +5,7 @@ pipeline {
         PROJECT_ID='gke-jenkins-246915'
         IMAGE_NAME='configserver'
         ENV='dev'    
-        IMAGE_TAG='gcr.io/'+$PROJECT_ID+'/'+$IMAGE_NAME+':latest'
+        IMAGE_TAG="gcr.io/"+$PROJECT_ID+"/"+$IMAGE_NAME+":latest"
         
     }
     tools{
