@@ -28,7 +28,7 @@ pipeline {
 
             steps {
                 script{
-                    docker.withServer('tcp://doc.config-server-service:4243') {
+                    withDockerServer('tcp://doc.config-server-service:4243') {
                     def myImage = docker.build("${IMAGE_NAME}")
                            println "Newly generated image, " + image.id
                  }
