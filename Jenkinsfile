@@ -28,8 +28,7 @@ pipeline {
 
             steps {
                 script{
-                    nslookup docker.config-server-service
-                    docker.withServer('tcp://docker.config-server-service:4243') {
+                    docker.withServer('tcp://doc.config-server-service:4243') {
                     def myImage = docker.build("${IMAGE_NAME}")
                            println "Newly generated image, " + image.id
                  }
