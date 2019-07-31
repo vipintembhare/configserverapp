@@ -27,10 +27,10 @@ pipeline {
         stage ('Docker Stage') {
 
             steps {
-                    script {
-                    image = docker.build("${IMAGE_NAME}")
-                    println "Newly generated image, " + image.id
-                }
+                    docker.withServer('tcp://my.docker.host:2345') {
+                    def myImage = docker.build("${IMAGE_NAME}")
+                           println "Newly generated image, " + image.id
+               }
             }
         }
     }
