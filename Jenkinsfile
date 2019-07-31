@@ -27,9 +27,11 @@ pipeline {
         stage ('Docker Stage') {
 
             steps {
+                script{
                     docker.withServer('tcp://docker.config-server-service:4243') {
                     def myImage = docker.build("${IMAGE_NAME}")
                            println "Newly generated image, " + image.id
+                 }
                }
             }
         }
