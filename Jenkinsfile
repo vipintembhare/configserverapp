@@ -5,8 +5,7 @@ pipeline {
         PROJECT_ID='gke-jenkins-246915'
         IMAGE_NAME='configserver'
         ENV='dev'    
-        IMAGE_TAG="gcr.io/$PROJECT_ID/+$IMAGE_NAME:latest"
-        
+        IMAGE_TAG="$PROJECT_ID/$IMAGE_NAME:latest"
     }
     tools{
        maven 'M3'
@@ -28,10 +27,16 @@ pipeline {
 
             steps {
                 script{
-                    withDockerServer('tcp://doc.config-server-service:4243') {
-                    def myImage = docker.build("${IMAGE_NAME}")
-                           println "Newly generated image, " + image.id
+                    docker.withTool("docker") {
+                    docker.withServer('tcp://doc.config-server-service:2375') {
+                    def image = docker.build("${IMAGE_TAG}")
+                    println "Newly generated image, " + image.id
+                    
+                    docker.withRegistry('https://us.gcr.io', 'gcr:gke-jenkins-key') {
+                           image.push('latest')
+                    }
                  }
+                    }
                }
             }
         }
