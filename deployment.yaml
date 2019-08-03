@@ -1,0 +1,57 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "config-server"
+  namespace: "default"
+  labels:
+    app: "config-server"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "config-server"
+  template:
+    metadata:
+      labels:
+        app: "config-server"
+    spec:
+      containers:
+      - name: "configserver"
+        image: "gcr.io/gke-jenkins-246915/configserver:latest"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "config-server-hpa"
+  namespace: "default"
+  labels:
+    app: "config-server"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "config-server"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+  - type: "Resource"
+    resource:
+      name: "cpu"
+      targetAverageUtilization: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: configserver-service
+  labels:
+    app: configserver-service
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 8888
+      name: http
+  selector:
+    app: config-server
