@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: "configserver"
-        image: "gcr.io/conference-console/configserver:latest"
+        image: "gcr.io/conference-console/configserver"
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
